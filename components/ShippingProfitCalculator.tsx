@@ -30,10 +30,15 @@ setPorts([...ports, { name: "", role: "Load", distance: 0, stay: 0, cost: 0 }])
 
 const updatePort = (index: number, key: keyof PortEntry, value: string | number) => {
 const updatedPorts = [...ports]
-updatedPorts[index][key] = key === "name" || key === "role" ? String(value) : Number(value)
-setPorts(updatedPorts)
+const port = updatedPorts[index]
+          if (key === "name" || key === "role") {
+  port[key] = value as string
+} else {
+  port[key] = Number(value) as number
 }
 
+setPorts(updatedPorts)
+}
 const totalDistance = ports.reduce((sum, port) => sum + port.distance, 0)
 const totalPortTime = ports.reduce((sum, port) => sum + port.stay, 0)
 const totalPortCharges = ports.reduce((sum, port) => sum + port.cost, 0)
@@ -54,7 +59,7 @@ const equivalentVesselPrice = (tce * 365) / 0.12
 return (
 <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
 <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "1rem" }}>Shipping Profitability Calculator
-          <div style={{ display: "grid", gap: "1rem" }}>
+       <div style={{ display: "grid", gap: "1rem" }}>
     <label>Cargo Quantity (MT)<input type="number" value={cargoQty} onChange={(e) => setCargoQty(Number(e.target.value))} /></label>
     <label>Freight Rate ($/MT)<input type="number" value={freightRate} onChange={(e) => setFreightRate(Number(e.target.value))} /></label>
     <label>Speed (knots)<input type="number" value={speed} onChange={(e) => setSpeed(Number(e.target.value))} /></label>
@@ -102,5 +107,6 @@ return (
     <p>Required Freight for Target TCE: ${reverseFreight.toFixed(2)}/MT</p>
     <p>Equivalent Vessel Price (12% ROI): ${equivalentVesselPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
   </div>
-</div>
-)}
+</div>     
+)
+}
